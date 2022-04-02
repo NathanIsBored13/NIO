@@ -1,12 +1,7 @@
 #pragma once
 
-#include <string>
-#include <sstream>
-
-template <class T>
-std::string toString(const T& obj)
+namespace NIO::Common
 {
-	std::stringstream ss;
-	ss << obj;
-	return ss.str();
+	#define NIO_COMMON_IMPLEXTERNS(T) template <> \
+		std::unordered_map<T, NIO::Common::IDispatcher<T>*> NIO::Common::ISendable<T>::m_dispatchers = std::unordered_map<T, NIO::Common::IDispatcher<T>*>();
 }

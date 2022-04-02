@@ -2,6 +2,9 @@
 
 #include "bufferptr.h"
 
+#include <stdint.h>
+#include <type_traits>
+
 namespace NIO::Common
 {
 	template <class E>

@@ -3,11 +3,15 @@
 #include "bufferhelper.h"
 #include "isendable.h"
 
+#include <stdint.h>
+#include <type_traits>
+
 namespace NIO::Common
 {
-	template <class E, const E V>
+	template <class T, class E, const E V>
 	class FlexibleSizeMessage : public ISendable<E>
 	{
+
 	public:
 		virtual size_t calculateSize() = 0;
 		virtual void serialise(BufferHelper&) = 0;
@@ -27,6 +31,11 @@ namespace NIO::Common
 			BufferHelper helper(ret.bufferptr, messageSize);
 			serialise(helper);
 			return ret;
+		}
+
+		static void registerMsgType(std::function<void(T)> callback)
+		{
+			ISendable<E>::m_dispatchers.insert(std::make_pair(V, new Dispatcher<E, T>(T::deserialise, callback)));
 		}
 	};
 }

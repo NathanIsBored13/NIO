@@ -6,11 +6,20 @@ strMsg::strMsg(std::string str) :
 
 size_t strMsg::calculateSize()
 {
-	return sizeof(uint32_t) + m_str.size();
+	return m_str.size() + 1;
 }
 
 void strMsg::serialise(NIO::Common::BufferHelper& helper)
 {
-	helper << (uint32_t)m_str.size();
-	helper.append((void*)m_str.c_str(), m_str.size());
+	helper.append(m_str.c_str(), m_str.size() + 1);
+}
+
+strMsg strMsg::deserialise(NIO::Common::SerialMessage<MessageTypes>& msg)
+{
+	return strMsg(std::string ((char*)msg.bufferptr));
+}
+
+std::string& strMsg::getValue()
+{
+	return m_str;
 }

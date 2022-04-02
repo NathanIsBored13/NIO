@@ -1,12 +1,16 @@
 #pragma once
 
+#include "dispatcher.h"
 #include "isendable.h"
+
+#include <cassert>
 
 namespace NIO::Common
 {
 	template <class T, class E, const E V>
-	struct FixedSizeMessage : public ISendable<E>
+	class FixedSizeMessage : public ISendable<E>
 	{
+	public:
 		SerialMessage<E> serialise() override
 		{
 			return SerialMessage<E>
@@ -18,6 +22,19 @@ namespace NIO::Common
 				},
 				this
 			};
+		}
+
+		static T deserialise(SerialMessage<E>& msg)
+		{
+			T ret{ 0 };
+			assert(msg.header.size == sizeof(T));
+			memcpy(&ret, msg.bufferptr, sizeof(T));
+			return ret;
+		}
+
+		static void registerMsgType(std::function<void(T)> callback)
+		{
+			ISendable<E>::m_dispatchers.insert(std::make_pair(V, new Dispatcher<E, T>(deserialise, callback)));
 		}
 	};
 }

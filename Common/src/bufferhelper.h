@@ -20,11 +20,17 @@ namespace NIO::Common
 				memcpy(&ret, m_ptr, sizeof(T));
 				m_ptr += sizeof(T);
 
-				return std::move(ret);
+				return ret;
 			}
 
 			bool operator == (const Iterator&);
 			bool operator != (const Iterator&);
+
+			template <class T>
+			operator T* ()
+			{
+				return (T*)m_ptr;
+			}
 		private:
 			uint8_t* m_ptr;
 		};

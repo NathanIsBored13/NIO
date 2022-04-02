@@ -5,19 +5,28 @@
 
 #include <iostream>
 
+NIO_COMMON_IMPLEXTERNS(MessageTypes)
+
 int main()
 {
-    NIO::Common::SerialMessage<MessageTypes>::MessageHeader msg = {
-        MessageTypes::SendInt,
-        10
-    };
+    intMsg::registerMsgType([](intMsg msg)
+        {
+            std::cout << msg.value << std::endl;
+        });
 
-    msg.id;
+    strMsg::registerMsgType([](strMsg msg)
+        {
+            std::cout << msg.getValue() << std::endl;
+        });
 
-    std::cout << "Hello World!" << std::endl;
-
-    intMsg m1;
+    intMsg m1(1);
     strMsg m2("test");
+    
+    NIO::Common::SerialMessage<MessageTypes> m1serial = m1.serialise();
+    NIO::Common::SerialMessage<MessageTypes> m2serial = m2.serialise();
+
+    NIO::Common::ISendable<MessageTypes>::deserialise(m1serial);
+    NIO::Common::ISendable<MessageTypes>::deserialise(m2serial);
 
     return 0;
 }
