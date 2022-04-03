@@ -1,4 +1,5 @@
-#include "ClientCommon/include.h"
+#include "SandboxCommon/include.h"
+#include "Common/include.h"
 
 #include <iostream>
 
@@ -18,7 +19,7 @@ int main()
 
     intMsg m1(1);
     strMsg m2("test");
-    
+
     NIO::Common::SerialMessage<MessageTypes> m1serial = m1.serialise();
     NIO::Common::SerialMessage<MessageTypes> m2serial = m2.serialise();
 
